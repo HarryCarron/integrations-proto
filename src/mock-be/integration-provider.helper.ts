@@ -8,7 +8,7 @@ export function startIntegration(): Observable<string> {
 
   const obs: Observable<number> = new Observable((subscriber) => {
     let progress = 0;
-    const increaseByLimit = 2;
+    const increaseByLimit = 1;
 
     interval(2000)
       .pipe(

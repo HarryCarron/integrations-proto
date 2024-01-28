@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AsyncPipe, NgStyle } from '@angular/common';
 import { IntegrationsService } from '../services/integrations/integrations.service';
-import { Observable, map, take, timer } from 'rxjs';
+import { Subject, take, timer } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -17,14 +17,21 @@ export class IntegrationProgressComponent {
     private readonly toastr: ToastrService
   ) {}
 
-  readonly Integrations$: Observable<number[]> =
-    this.IntegrationsService.pollActiveIntegrations();
+  private readonly destroy$ = new Subject<void>();
+
+  integrations: number[] = [];
 
   addIntegration() {
     this.IntegrationsService.beginIntegration();
   }
 
   ngOnInit() {
+    this.IntegrationsService.pollActiveIntegrations(this.destroy$).subscribe(
+      (integrations: number[]) => {
+        this.integrations = integrations;
+      }
+    );
+
     timer(500)
       .pipe(take(1))
       .subscribe(() => {
@@ -36,6 +43,8 @@ export class IntegrationProgressComponent {
   }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.toastr.warning(
       'Component destroyed and unsubscribed from multicast polling mechanism',
       'Integrations progress component destroyed'

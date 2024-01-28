@@ -3,12 +3,13 @@ import { checkIntegrationProgress } from '../../mock-be/integration-provider.hel
 import { startIntegration } from '../../mock-be/integration-provider.helper';
 import {
   Observable,
+  Subject,
   combineLatest,
   exhaustMap,
   interval,
-  shareReplay,
   startWith,
   take,
+  takeUntil,
 } from 'rxjs';
 
 @Injectable({
@@ -25,18 +26,20 @@ export class IntegrationsService {
   }
 
   // example req: GET /{{integration-provider}}/{{uuid}}/progress
-  public pollActiveIntegrations(time: number = 1000): Observable<number[]> {
-    const obs$ = interval(time).pipe(
+  public pollActiveIntegrations(
+    stop$: Subject<void>,
+    time: number = 1000
+  ): Observable<number[]> {
+    return interval(time).pipe(
+      takeUntil(stop$),
       startWith(null),
-      exhaustMap(() =>
-        combineLatest(
+      exhaustMap(() => {
+        return combineLatest(
           this.activeIntegrations.map((id) => {
             return checkIntegrationProgress(id).pipe(take(1));
           })
-        )
-      )
+        );
+      })
     );
-
-    return obs$.pipe(shareReplay(1));
   }
 }

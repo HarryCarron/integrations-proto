@@ -34,8 +34,8 @@
 
 
 
-  @if((Integrations$ | async)?.length) {
-  @for(progress of (Integrations$ | async); track $index) {
+  @if(integrations.length) {
+  @for(progress of integrations; track $index) {
   <div class="my-3">
     <div class="flex text-gray-400 text-xs mb-2">
       <div class="grow">
@@ -66,7 +66,7 @@
     </div>
     <div class="w-full bg-blue-100 rounded-full h-2">
       <div
-        class="bg-blue-500 h-full rounded-full transition-width transition-slowest ease"
+        class="bg-blue-500 h-full rounded-full transition-width duration-1000 ease"
         [ngStyle]="{width: progress + '%'}"
       ></div>
     </div>
