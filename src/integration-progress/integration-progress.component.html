@@ -1,0 +1,92 @@
+<div class="rounded-md border border-grey-200 p-5">
+
+  <div class="flex mb-4">
+
+    <div class="flex-1">
+      <h3 class="text-gray-600 font-bold">
+        Integrations
+      </h3>
+    </div>
+
+
+
+    <div
+      class="flex justify-center items-center cursor-pointer"
+      (click)="addIntegration()"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="3"
+        stroke="currentColor"
+        class="w-4 h-4"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M12 4.5v15m7.5-7.5h-15"
+        />
+      </svg>
+
+    </div>
+  </div>
+
+
+
+  @if((Integrations$ | async)?.length) {
+  @for(progress of (Integrations$ | async); track $index) {
+  <div class="my-3">
+    <div class="flex text-gray-400 text-xs mb-2">
+      <div class="grow">
+        @if (progress > 0 && progress <
+          100)
+          {
+          <strong
+        >
+          Integration in progress
+
+          </strong>
+          } @else if (!progress) {
+          <strong>
+            Starting...
+
+          </strong>
+          }
+
+      </div>
+      <div class="flex-none text-blue-400">
+        <strong>
+          {{
+          (progress || 0) + '%'
+          }}
+        </strong>
+
+      </div>
+    </div>
+    <div class="w-full bg-blue-100 rounded-full h-2">
+      <div
+        class="bg-blue-500 h-full rounded-full transition-width transition-slowest ease"
+        [ngStyle]="{width: progress + '%'}"
+      ></div>
+    </div>
+  </div>
+
+  }
+
+  } @else {
+
+  @for (pendingIntegration of IntegrationsService.activeIntegrations; track $index) {
+  <div class="bg-gray-50 rounded-md p-2 mb-3">
+    <div class="w-[80px] bg-gray-200 rounded-md p-1 mb-2 animate-pulse">
+
+    </div>
+    <div class="h-2 bg-gray-200 rounded-md p-1 animate-pulse">
+    </div>
+  </div>
+  }
+  }
+
+
+
+</div>
