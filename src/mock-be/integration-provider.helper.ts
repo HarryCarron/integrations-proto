@@ -38,7 +38,7 @@ export function startIntegration(): Observable<string> {
 
 function addIntegration(obs: Observable<number>, id: string): string {
   integrations[id] = obs;
-  obs.subscribe();
+  obs.subscribe(); // begin integration on mock itegration provder
   return id;
 }
 
