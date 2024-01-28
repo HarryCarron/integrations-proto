@@ -17,14 +17,14 @@ import {
 export class IntegrationsService {
   public readonly activeIntegrations: string[] = [];
 
-  // example req: GET /{{integration-prodiver}}/{{uuid}}
+  // example req: GET /{{integration-provider}}/{{uuid}}
   public beginIntegration(): void {
     startIntegration()
       .pipe(take(1))
       .subscribe((id: string) => this.activeIntegrations.push(id));
   }
 
-  // example req: GET /{{integration-prodiver}}/{{uuid}}/progress
+  // example req: GET /{{integration-provider}}/{{uuid}}/progress
   public pollActiveIntegrations(time: number = 1000): Observable<number[]> {
     const obs$ = interval(time).pipe(
       startWith(null),
